@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مراقب الكاميرات</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body onload="updateDateTime()">
+
+
+    <style>
+        body {
+            background-image: url('assets/background.jpg');
+            /* استبدل باسم الصورة */
+            background-size: cover;
+            /* تغطية الشاشة بالكامل */
+            background-position: center;
+            /* توسيط الخلفية */
+            background-repeat: no-repeat;
+            /* منع التكرار */
+            background-attachment: fixed;
+            /* جعل الخلفية ثابتة أثناء التمرير */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+
+    <!-- لوجو الشركة -->
+    <img src="assets/logo.png" alt="لوجو الشركة" class="logo">
+
+
+
+
+    <h2 class="title">cctv account</h2>
+
+
+
+
+
+
+
+
+    <p id="datetime"></p>
+
+
+    <p id="datetime"></p>
+
+    <script>
+        function updateDateTime() {
+            var now = new Date();
+            var options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            document.getElementById("datetime").innerHTML = now.toLocaleDateString('ar-EG', options);
+        }
+
+        // تحديث الوقت كل ثانية
+        setInterval(updateDateTime, 1000);
+
+        // تشغيل الوظيفة عند تحميل الصفحة
+        updateDateTime();
+    </script>
+
+
+    <!-- الأزرار الخاصة بكل قسم -->
+    <div class="buttons-container">
+        <button onclick="openSection('masasa')">قسم المصاصة</button>
+        <button onclick="openSection('chocolate')">قسم الشيكولاتة</button>
+        <button onclick="openSection('storage')">قسم المخازن</button>
+        <button onclick="openSection('carton')">مخزن الكارتون</button>
+        <button onclick="openSection('stairs')">السلالم والشيكولاتة</button>
+        <button onclick="openSection('external')">الخارجي</button>
+    </div>
+
+    <!-- جدول عرض المخالفات لكل قسم -->
+    <div id="violations-container" style="display: none;">
+        <h3 id="section-title"></h3>
+
+        <button id="add-violation-btn" onclick="showAddViolationForm()">➕ إضافة مخالفة</button>
+
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>رقم الكاميرا</th>
+                    <th>التوقيت</th>
+                    <th>اسم المخالف</th>
+                    <th>المخالفة</th>
+                    <th>ملاحظات HR</th>
+                    <th>الإجراء المتخذ</th>
+                    <th>تعديل</th>
+                    <th>مسح</th>
+                </tr>
+            </thead>
+            <tbody id="violations-table">
+                <!-- سيتم إضافة المخالفات هنا -->
+            </tbody>
+        </table>
+
+        <button onclick="saveReport()">📁 حفظ التقرير</button>
+    </div>
+
+    <!-- نموذج إضافة مخالفة -->
+    <div id="add-violation-form" style="display: none;">
+        <h3>إضافة مخالفة</h3>
+        <label>رقم الكاميرا:</label>
+        <input type="text" id="camera-number"><br>
+
+        <label>التوقيت:</label>
+        <input type="time" id="time"><br>
+
+        <label>اسم المخالف :</label>
+        <<input type="text" id="violator-name"><br>
+
+
+            <label>المخالفة:</label>
+            <input type="text" id="violation"><br>
+
+            <label>ملاحظات HR:</label>
+            <input type="text" id="hr-notes"><br>
+
+            <label>الإجراء المتخذ:</label>
+            <select id="action">
+            <option value="لفت نظر">لفت نظر</option>
+            <option value="ربع يوم">ربع يوم</option>
+            <option value="نصف يوم">نصف يوم</option>
+            <option value="يوم">يوم</option>
+            <option value="ثلاثة أيام">ثلاثة أيام</option>
+        </select><br>
+
+            <button onclick="addViolation()">✅ حفظ المخالفة</button>
+    </div>
+
+    <script>
+        let selectedSection = "";
+
+        function updateDateTime() {
+            let now = new Date();
+            let formattedDate = now.toLocaleDateString('ar-EG', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            let formattedTime = now.toLocaleTimeString();
+            document.getElementById("datetime").innerText = `📅 ${formattedDate} - ⏰ ${formattedTime}`;
+        }
+
+        function openSection(section) {
+            selectedSection = section;
+            document.getElementById("violations-container").style.display = "block";
+            document.getElementById("section-title").innerText = `📌 جدول المخالفات - ${section}`;
+            loadViolations();
+        }
+
+        function showAddViolationForm() {
+            document.getElementById("add-violation-form").style.display = "block";
+        }
+
+        function addViolation() {
+            let cameraNumber = document.getElementById("camera-number").value;
+            let time = document.getElementById("time").value;
+            let violatorname = document.getElementById("violatorname").value;
+            let violation = document.getElementById("violation").value;
+            let hrNotes = document.getElementById("hr-notes").value;
+            let action = document.getElementById("action").value;
+
+            if (cameraNumber && time && violation) {
+                let table = document.getElementById("violations-table");
+                let row = table.insertRow();
+                row.insertCell(0).innerText = cameraNumber;
+                row.insertCell(1).innerText = time;
+                row.insertCell(2).innerText = violatorname;
+                row.insertCell(3).innerText = violation;
+                row.insertCell(4).innerText = hrNotes;
+                row.insertCell(5).innerText = action;
+
+                let editCell = row.insertCell(6);
+                let editButton = document.createElement("button");
+                editButton.innerText = "✏️ تعديل";
+                editButton.onclick = () => editViolation(row);
+                editCell.appendChild(editButton);
+
+                let deleteCell = row.insertCell(7);
+                let deleteButton = document.createElement("button");
+                deleteButton.innerText = "🗑️ مسح";
+                deleteButton.onclick = () => row.remove();
+                deleteCell.appendChild(deleteButton);
+
+                document.getElementById("add-violation-form").style.display = "none";
+                saveViolationToReports(cameraNumber, time, violation, hrNotes, action);
+            } else {
+                alert("يجب إدخال جميع الحقول!");
+            }
+        }
+
+        function editViolation(row) {
+            let cells = row.cells;
+            document.getElementById("camera-number").value = cells[0].innerText;
+            document.getElementById("time").value = cells[1].innerText;
+            document.getElementById("violatorname").value = cells[2].innerText;
+            document.getElementById("violation").value = cells[3].innerText;
+            document.getElementById("hr-notes").value = cells[4].innerText;
+            document.getElementById("action").value = cells[5].innerText;
+            row.remove();
+            showAddViolationForm();
+        }
+
+        function saveViolationToReports(cameraNumber, time, violatorname, violation, hrNotes, action) {
+            let violations = JSON.parse(localStorage.getItem(selectedSection)) || [];
+            violations.push({
+                cameraNumber,
+                time,
+                violation,
+                violatorname,
+                hrNotes,
+                action
+            });
+            localStorage.setItem(selectedSection, JSON.stringify(violations));
+        }
+
+        function loadViolations() {
+            let violations = JSON.parse(localStorage.getItem(selectedSection)) || [];
+            let table = document.getElementById("violations-table");
+            table.innerHTML = "";
+
+            violations.forEach(v => {
+                let row = table.insertRow();
+                row.insertCell(0).innerText = v.cameraNumber;
+                row.insertCell(1).innerText = v.time;
+                row.insertCell(2).innerText = v.iolatorname;
+                row.insertCell(3).innerText = v.violation;
+                row.insertCell(4).innerText = v.hrNotes;
+                row.insertCell(5).innerText = v.action;
+
+                let editCell = row.insertCell(6);
+                let editButton = document.createElement("button");
+                editButton.innerText = "✏️ تعديل";
+                editButton.onclick = () => editViolation(row);
+                editCell.appendChild(editButton);
+
+                let deleteCell = row.insertCell(7);
+                let deleteButton = document.createElement("button");
+                deleteButton.innerText = "🗑️ مسح";
+                deleteButton.onclick = () => row.remove();
+                deleteCell.appendChild(deleteButton);
+            });
+        }
+
+        function saveReport() {
+            let now = new Date();
+            let formattedDate = now.toISOString().split('T')[0];
+            localStorage.setItem(`report_${formattedDate}`, JSON.stringify(localStorage));
+            alert("📁 تم حفظ التقرير بنجاح!");
+        }
+    </script>
+
+</body>
+
+</html>

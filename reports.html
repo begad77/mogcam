@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التقارير - مراقبة الكاميرات</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="home.html">الرئيسية</a></li>
+            <li><a href="reports.html">التقارير</a></li>
+            <li><a href="index.html">تسجيل الخروج</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <h1>سجل التقارير السابقة</h1>
+        <input type="date" id="filterDate" placeholder="اختر تاريخ">
+        <button onclick="filterReports()">بحث</button>
+    </header>
+
+    <table>
+        <thead>
+            <tr>
+                <th>التاريخ</th>
+                <th>رقم الكاميرا</th>
+                <th>المخالفة</th>
+                <th>المسؤول</th>
+                <th>اسم المخالف</th>
+                <th>الجزاء</th>
+            </tr>
+        </thead>
+        <tbody id="reportsTable">
+            <tr>
+                <td>2024-03-10</td>
+                <td>5</td>
+                <td>عدم ارتداء الزي</td>
+                <td>أحمد علي</td>
+                <td>محمد حسن</td>
+                <td>لفت نظر</td>
+            </tr>
+            <tr>
+                <td>2024-03-09</td>
+                <td>8</td>
+                <td>التأخير عن العمل</td>
+                <td>خالد محمود</td>
+                <td>أحمد سعيد</td>
+                <td>خصم نصف يوم</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button id="addReport">إضافة تقرير جديد</button>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

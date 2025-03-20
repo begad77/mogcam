@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="login-page">
+
+    <div class="login-container">
+        <h2 style="color: white;">تسجيل الدخول</h2>
+        <input type="text" id="username" placeholder="اسم المستخدم">
+        <input type="password" id="password" placeholder="كلمة المرور">
+        <button onclick="login()">تسجيل الدخول</button>
+        <p id="error-message" style="color: red; display: none;">اسم المستخدم أو كلمة المرور غير صحيحة!</p>
+    </div>
+
+    <script>
+        // بيانات تسجيل الدخول
+        const users = {
+            "cctv": {
+                password: "1234",
+                role: "cctv"
+            }, // مراقب الكاميرات
+            "hr": {
+                password: "5678",
+                role: "hr"
+            }, // قسم الموارد البشرية
+            "admin": {
+                password: "admin",
+                role: "admin"
+            } // الإدارة
+        };
+
+        function login() {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+            let errorMessage = document.getElementById("error-message");
+
+            if (users[username] && users[username].password === password) {
+                let role = users[username].role;
+
+                // توجيه المستخدم حسب دوره
+                if (role === "cctv") {
+                    window.location.href = "cctv_dashboard.html"; // صفحة مراقب الكاميرات
+                } else if (role === "hr") {
+                    window.location.href = "hr_dashboard.html"; // صفحة قسم الموارد البشرية
+                } else if (role === "admin") {
+                    window.location.href = "admin_dashboard.html"; // صفحة الإدارة
+                }
+            } else {
+                errorMessage.style.display = "block"; // عرض رسالة خطأ
+            }
+        }
+    </script>
+
+</body>
+
+</html>
